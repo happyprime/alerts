@@ -76,10 +76,10 @@ function get_alert_level_fields() {
  * Returns the time until transient expiration in seconds.
  *
  * @param string $display_through Date through which the alert should be shown.
- * @return int Seconds through trasient expiration.
+ * @return int Transient expiration in seconds.
  */
 function get_expiration( $display_through ) {
-	$today   = strtotime( gmdate( 'Y-m-d' ) );
+	$today   = strtotime( gmdate( 'Y-m-d H:i:s' ) );
 	$through = strtotime( $display_through );
 
 	return $through - $today;
@@ -101,10 +101,12 @@ function display_alert_meta_box( $post ) {
 	$level = ( $level ) ? $level : 'low';
 
 	// Set the default minimum as today.
-	$through_default = gmdate( 'Y-m-d' );
+	// Seconds intentionally left out for nicer display in the time input.
+	$through_default = explode( ' ', gmdate( 'Y-m-d H:i' ) );
 
 	// Set the default "Display alert through" value as one day from now.
-	$through = ( $through ) ? $through : wp_date( 'Y-m-d', strtotime( '+1 day' ) );
+	$through = ( $through ) ? $through : wp_date( 'Y-m-d H:i', strtotime( '+1 day' ) );
+	$through = explode( ' ', $through );
 
 	?>
 	<p><?php esc_html_e( 'Alert level', 'hp-alerts' ); ?></p>
@@ -130,10 +132,17 @@ function display_alert_meta_box( $post ) {
 		<label for="hp-alert_display-through"><?php esc_html_e( 'Display alert through', 'hp-alerts' ); ?></label>
 		<input
 			type="date"
-			id="hp-alert_display-through"
-			name="_hp_alert_display_through"
-			value="<?php echo esc_attr( $through ); ?>"
-			min="<?php echo esc_attr( $through_default ); ?>"
+			id="hp-alert_display-through-date"
+			name="_hp_alert_display_through_date"
+			value="<?php echo esc_attr( $through[0] ); ?>"
+			min="<?php echo esc_attr( $through_default[0] ); ?>"
+		/>
+		<input
+			type="time"
+			id="hp-alert_display-through-time"
+			name="_hp_alert_display_through_time"
+			value="<?php echo esc_attr( $through[1] ); ?>"
+			min="<?php echo esc_attr( $through_default[1] ); ?>"
 		/>
 	</p>
 	<?php
@@ -183,8 +192,11 @@ function save_post_meta( $post_id, $post ) {
 		update_post_meta( $post_id, '_hp_alert_level', $level );
 	}
 
-	if ( isset( $_POST['_hp_alert_display_through'] ) && '' !== sanitize_text_field( wp_unslash( $_POST['_hp_alert_display_through'] ) ) ) {
-		$display_through = sanitize_text_field( wp_unslash( $_POST['_hp_alert_display_through'] ) );
+	if ( isset( $_POST['_hp_alert_display_through_date'] ) && '' !== sanitize_text_field( wp_unslash( $_POST['_hp_alert_display_through_date'] ) ) ) {
+		$display_through  = sanitize_text_field( wp_unslash( $_POST['_hp_alert_display_through_date'] ) );
+		$display_through .= ( isset( $_POST['_hp_alert_display_through_time'] ) && '' !== sanitize_text_field( wp_unslash( $_POST['_hp_alert_display_through_time'] ) ) )
+			? ' ' . sanitize_text_field( wp_unslash( $_POST['_hp_alert_display_through_time'] ) ) . ':00'
+			: ' 23:59:59';
 
 		// Overwrite the expiration for the transient.
 		$expiration = get_expiration( $display_through );
@@ -236,9 +248,9 @@ function display_alert_bar() {
 				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					array(
 						'key'     => '_hp_alert_display_through',
-						'value'   => wp_date( 'Y-m-d' ),
-						'compare' => '>=',
-						'type'    => 'DATE',
+						'value'   => wp_date( 'Y-m-d H:i:s' ),
+						'compare' => '>',
+						'type'    => 'DATETIME',
 					),
 				),
 			)

@@ -39,7 +39,7 @@ if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
  * @return string Current alert transient key.
  */
 function hp_get_alerts_transient_key() {
-	return 'hp_alert_data_001';
+	return 'hp_alert_data_002';
 }
 
 require_once __DIR__ . '/includes/alerts.php';
