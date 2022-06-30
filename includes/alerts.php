@@ -286,7 +286,11 @@ function display_alert_bar() {
 	}
 
 	// Low level alerts should display only on the home page.
-	if ( 'low' === $alert_data['level'] && ! is_front_page() ) {
+	$display_banner = 'low' === $alert_data['level'] && ! is_front_page()
+		? false
+		: true;
+
+	if ( ! apply_filters( 'hp_alerts_display_banner', $display_banner, $alert_data ) ) {
 		return;
 	}
 
