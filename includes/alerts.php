@@ -16,7 +16,6 @@ add_action( 'wp_body_open', __NAMESPACE__ . '\display_alert_bar', 10 );
  * Register the Alert post type.
  */
 function register_post_type() {
-
 	$args = array(
 		'label'                => __( 'Alerts', 'hp-alerts' ),
 		'labels'               => array(
@@ -65,11 +64,13 @@ function add_meta_boxes() {
  * @return array Field values keyed by id.
  */
 function get_alert_level_fields() {
-	return array(
+	$defaults = array(
 		'low'    => __( 'Announcement', 'hp-alerts' ),
 		'medium' => __( 'High-level announcement', 'hp-alerts' ),
 		'high'   => __( 'Safety alert', 'hp-alerts' ),
 	);
+
+	return apply_filters( 'hp_alerts_level_options', $defaults );
 }
 
 /**
@@ -285,7 +286,11 @@ function display_alert_bar() {
 	}
 
 	// Low level alerts should display only on the home page.
-	if ( 'low' === $alert_data['level'] && ! is_front_page() ) {
+	$display_banner = 'low' === $alert_data['level'] && ! is_front_page()
+		? false
+		: true;
+
+	if ( ! apply_filters( 'hp_alerts_display_banner', $display_banner, $alert_data ) ) {
 		return;
 	}
 
