@@ -5,7 +5,7 @@
  * Description: Display alerts of various levels for a given amount of time.
  * Author: Happy Prime
  * Author URI: https://happyprime.co/
- * Version: 1.1.0
+ * Version: 2.0.0
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *

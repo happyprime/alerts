@@ -1,0 +1,2 @@
+# Ignore all 3rd party libraries.
+/vendor/
