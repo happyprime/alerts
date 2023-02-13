@@ -7,7 +7,6 @@
 
 namespace HP\Alerts;
 
-add_action( 'init', __NAMESPACE__ . '\register_post_type', 10 );
 add_action( 'save_post_alert', __NAMESPACE__ . '\save_post_meta', 10, 2 );
 add_action( 'wp_trash_post', __NAMESPACE__ . '\delete_alert_transient', 10 );
 add_action( 'wp_body_open', __NAMESPACE__ . '\display_alert_bar', 10 );
@@ -23,38 +22,6 @@ function get_post_types(): array {
 	);
 
 	return apply_filters( 'alerts_get_post_types', $post_types );
-}
-
-/**
- * Register the Alert post type.
- */
-function register_post_type() {
-	$args = array(
-		'label'                => __( 'Alerts', 'hp-alerts' ),
-		'labels'               => array(
-			'name'          => _x( 'Alerts', 'Post Type General Name', 'hp-alerts' ),
-			'singular_name' => _x( 'Alert', 'Post Type Singular Name', 'hp-alerts' ),
-			'add_new'       => __( 'Add New Alert', 'hp-alerts' ),
-		),
-		'description'          => '',
-		'public'               => true,
-		'exclude_from_search'  => true,
-		'show_in_nav_menus'    => false,
-		'show_in_rest'         => true,
-		'menu_position'        => 30,
-		'menu_icon'            => 'dashicons-warning',
-		'supports'             => array(
-			'title',
-			'editor',
-			'excerpt',
-			'author',
-			'revisions',
-		),
-		'register_meta_box_cb' => __NAMESPACE__ . '\add_meta_boxes',
-		'delete_with_user'     => false,
-	);
-
-	\register_post_type( 'alert', $args );
 }
 
 /**
@@ -108,11 +75,7 @@ function display_alert_meta_box( $post ) {
 	wp_nonce_field( 'hp_check_alert', 'hp_alert_nonce' );
 
 	// Get existing meta values.
-	$level   = get_post_meta( $post->ID, '_hp_alert_level', true );
 	$through = get_post_meta( $post->ID, '_hp_alert_display_through', true );
-
-	// Set `low` as the default alert level.
-	$level = ( $level ) ? $level : 'low';
 
 	// Set the default minimum as today.
 	// Seconds intentionally left out for nicer display in the time input.
@@ -121,25 +84,6 @@ function display_alert_meta_box( $post ) {
 	// Set the default "Display alert through" value as one day from now.
 	$through = ( $through ) ? $through : wp_date( 'Y-m-d H:i', strtotime( '+1 day' ) );
 	$through = explode( ' ', $through );
-
-	?>
-	<p><?php esc_html_e( 'Alert level', 'hp-alerts' ); ?></p>
-	<?php
-
-	foreach ( get_alert_level_fields() as $id => $label ) :
-		?>
-		<p>
-			<input
-				type="radio"
-				id="hp-alert_level-<?php echo esc_attr( $id ); ?>"
-				name="_hp_alert_level"
-				value="<?php echo esc_attr( $id ); ?>"
-				<?php checked( $level, $id ); ?>
-			>
-			<label for="hp-alert_level-<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
-		</p>
-		<?php
-	endforeach;
 
 	?>
 	<p>
@@ -196,15 +140,6 @@ function save_post_meta( $post_id, $post ) {
 
 	// Set up the initial expiration for the transient (none by default).
 	$expiration = 0;
-
-	if ( isset( $_POST['_hp_alert_level'] ) && in_array( $_POST['_hp_alert_level'], array_keys( get_alert_level_fields() ), true ) ) {
-		$level = sanitize_text_field( wp_unslash( $_POST['_hp_alert_level'] ) );
-
-		// Add the alert level to the transient data.
-		$alert_data['level'] = $level;
-
-		update_post_meta( $post_id, '_hp_alert_level', $level );
-	}
 
 	if ( isset( $_POST['_hp_alert_display_through_date'] ) && '' !== sanitize_text_field( wp_unslash( $_POST['_hp_alert_display_through_date'] ) ) ) {
 		$display_through  = sanitize_text_field( wp_unslash( $_POST['_hp_alert_display_through_date'] ) );
