@@ -13,6 +13,19 @@ add_action( 'wp_trash_post', __NAMESPACE__ . '\delete_alert_transient', 10 );
 add_action( 'wp_body_open', __NAMESPACE__ . '\display_alert_bar', 10 );
 
 /**
+ * Retrieve the post types with Alerts support.
+ *
+ * @return array A list of post types.
+ */
+function get_post_types(): array {
+	$post_types = array(
+		'post',
+	);
+
+	return apply_filters( 'alerts_get_post_types', $post_types );
+}
+
+/**
  * Register the Alert post type.
  */
 function register_post_type() {

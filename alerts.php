@@ -43,3 +43,4 @@ function hp_get_alerts_transient_key() {
 }
 
 require_once __DIR__ . '/includes/alerts.php';
+require_once __DIR__ . '/includes/taxonomy/alert-level.php';
