@@ -47,7 +47,7 @@ function register_meta() {
 				'show_in_rest'  => true,
 				'auth_callback' => '__return_true',
 				'single'        => true,
-				'type'          => 'number',
+				'type'          => 'integer',
 			]
 		);
 	}
