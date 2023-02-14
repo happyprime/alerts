@@ -19,6 +19,13 @@ function get_post_types(): array {
 		'post',
 	);
 
+	/**
+	 * Filters the list of post types that support alerts.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string[] $post_types An array of post type keys.
+	 */
 	return apply_filters( 'alerts_get_post_types', $post_types );
 }
 
