@@ -11,6 +11,7 @@ use HP\Alerts\Taxonomy\AlertLevel;
 
 add_action( 'init', __NAMESPACE__ . '\register_meta' );
 add_action( 'updated_post_meta', __NAMESPACE__ . '\store_display_through', 10, 4 );
+add_action( 'added_post_meta', __NAMESPACE__ . '\store_display_through', 10, 4 );
 add_action( 'shutdown', __NAMESPACE__ . '\check_expired' );
 add_action( 'hp_alerts_process_expired', __NAMESPACE__ . '\process_expired' );
 
@@ -45,6 +46,8 @@ function register_meta() {
 			[
 				'show_in_rest'  => true,
 				'auth_callback' => '__return_true',
+				'single'        => true,
+				'type'          => 'number',
 			]
 		);
 	}
@@ -91,7 +94,7 @@ function check_expired() {
 	$now = time() + 30;
 
 	foreach ( $current_alerts as $expiration ) {
-		if ( $now <= (int) $expiration ) {
+		if ( $now >= (int) $expiration ) {
 			wp_schedule_single_event( $now, 'hp_alerts_process_expired' );
 		}
 	}
@@ -111,7 +114,7 @@ function process_expired() {
 
 	foreach ( $alerts as $alert ) {
 		// Capture alerts that are still valid.
-		if ( time() > (int) $alert->meta_value ) {
+		if ( time() < (int) $alert->meta_value ) {
 			$current_alerts[ $alert->post_id ] = $alert->meta_value;
 		} else {
 			// Remove the expiration date.
