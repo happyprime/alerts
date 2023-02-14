@@ -11,6 +11,10 @@ use HP\Alerts;
 
 add_action( 'init', __NAMESPACE__ . '\register_taxonomy' );
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\enqueue_block_editor_assets' );
+add_action( get_slug() . '_edit_form_fields', __NAMESPACE__ . '\display_edit_form_fields' );
+add_action( get_slug() . '_add_form_fields', __NAMESPACE__ . '\display_add_form_fields' );
+add_action( 'edit_' . get_slug(), __NAMESPACE__ . '\save_term_meta' );
+add_action( 'create_' . get_slug(), __NAMESPACE__ . '\save_term_meta' );
 
 /**
  * Provide the slug used to register the taxonomy.
@@ -66,4 +70,79 @@ function enqueue_block_editor_assets() {
 		$asset_data['version'],
 		true
 	);
+}
+
+/**
+ * Display a custom field when adding an aggregate term.
+ */
+function display_add_form_fields() {
+	wp_nonce_field( 'save_alert_level_meta', 'alert_level_meta' );
+	?>
+	<div class="form-field">
+		<style>.flexed-label { display: flex; gap: 0.5rem; align-items: center;} .flexed-label input { margin-top: 0; }</style>
+		<span class="flexed-label">
+			<label for="alert-level-default"><?php esc_html_e( 'Default alert level', 'hp-alerts' ); ?></label>
+			<input type="checkbox" name="alert_level_default" id="alert-level-default" aria-describedby="alert-level-default-description" />
+		</span>
+		<p class="description" id="alert-level-default-description"><?php esc_html_e( 'Checking this box will set this alert level as default and clear the setting from other levels.' ); ?></p>
+	</div>
+	<?php
+}
+
+/**
+ * Display a custom field when editing an aggregate term.
+ *
+ * @param \WP_Term $term Current taxonomy term object.
+ */
+function display_edit_form_fields( \WP_Term $term ) {
+	$checked = get_term_meta( $term->term_id, 'hp_alert_level_default', true );
+
+	wp_nonce_field( 'save_alert_level_meta', 'alert_level_meta' );
+	?>
+	<tr class="form-field">
+		<th scope="row">
+			<label for="alert-level-default"><?php esc_html_e( 'Default alert level', 'hp-alerts' ); ?></label>
+		</th>
+		<td>
+			<input type="checkbox" name="alert_level_default" id="alert-level-default" aria-describedby="alert-level-default-description" <?php checked( $checked ); ?> />
+			<p class="description" id="alert-level-default-description"><?php esc_html_e( 'Checking this box will set this alert level as default and clear the setting from other levels.' ); ?></p>
+		</td>
+	</tr>
+	<?php
+}
+
+/**
+ * Clear the database and cache of any previous alert level default setting.
+ */
+function clear_term_meta() {
+	global $wpdb;
+
+	$terms = $wpdb->get_results( "SELECT term_id FROM $wpdb->termmeta WHERE meta_key = 'hp_alert_level_default'" );
+	$wpdb->query( "DELETE FROM $wpdb->termmeta WHERE meta_key = 'hp_alert_level_default'" );
+
+	$term_ids = wp_list_pluck( $terms, 'term_id' );
+	$term_ids = array_map( 'intval', $term_ids );
+
+	clean_term_cache( $term_ids, get_slug() );
+}
+
+/**
+ * Save alert level term meta.
+ *
+ * @param int $term_id The term ID.
+ */
+function save_term_meta( int $term_id ) {
+	if ( ! isset( $_POST['alert_level_meta'] ) || ! wp_verify_nonce( $_POST['alert_level_meta'], 'save_alert_level_meta' ) ) {
+		return;
+	}
+
+	if ( isset( $_POST['alert_level_default'] ) ) {
+		clear_term_meta();
+
+		update_term_meta(
+			$term_id,
+			'hp_alert_level_default',
+			true
+		);
+	}
 }
