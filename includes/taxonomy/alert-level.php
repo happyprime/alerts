@@ -11,6 +11,7 @@ use HP\Alerts;
 
 add_action( 'init', __NAMESPACE__ . '\register_taxonomy' );
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\enqueue_block_editor_assets' );
+add_filter( 'body_class', __NAMESPACE__ . '\filter_body_class' );
 add_action( get_slug() . '_edit_form_fields', __NAMESPACE__ . '\display_edit_form_fields' );
 add_action( get_slug() . '_add_form_fields', __NAMESPACE__ . '\display_add_form_fields' );
 add_action( 'edit_' . get_slug(), __NAMESPACE__ . '\save_term_meta' );
@@ -55,6 +56,35 @@ function register_taxonomy() {
 			'show_in_rest'      => true,
 		]
 	);
+}
+
+/**
+ * Filter the body class to include the alert level when viewing a single
+ * supported post type.
+ *
+ * @param array $classes List of class names to apply to the body element.
+ * @return array Modified list of class names.
+ */
+function filter_body_class( array $classes ): array {
+	if ( ! is_singular( Alerts\get_post_types() ) ) {
+		return $classes;
+	}
+
+	$levels = wp_get_object_terms(
+		get_queried_object_id(),
+		get_slug(),
+		[
+			'fields'                 => 'slugs',
+			'number'                 => 1,
+			'update_term_meta_cache' => false,
+		]
+	);
+
+	foreach ( $levels as $level ) {
+		$classes[] = 'has-alert-level-' . $level;
+	}
+
+	return $classes;
 }
 
 /**
