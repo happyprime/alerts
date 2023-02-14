@@ -1,6 +1,6 @@
 <?php
 /**
- * Registers the Alert post type and handles display of the alert bar.
+ * Manage common alerts functionality.
  *
  * @package HP_Alerts
  */
