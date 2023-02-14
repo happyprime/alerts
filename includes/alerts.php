@@ -8,7 +8,6 @@
 namespace HP\Alerts;
 
 add_action( 'init', __NAMESPACE__ . '\register_meta' );
-add_action( 'save_post_alert', __NAMESPACE__ . '\save_post_meta', 10, 2 );
 
 /**
  * Retrieve the post types with Alerts support.
