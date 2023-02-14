@@ -36,14 +36,5 @@ if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
 define( 'HP_ALERTS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'HP_ALERTS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
-/**
- * Provides a versioned transient key for getting and setting alert data.
- *
- * @return string Current alert transient key.
- */
-function hp_get_alerts_transient_key() {
-	return 'hp_alert_data_002';
-}
-
 require_once __DIR__ . '/includes/alerts.php';
 require_once __DIR__ . '/includes/taxonomy/alert-level.php';
