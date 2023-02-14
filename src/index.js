@@ -36,7 +36,11 @@ const setAlertLevel = ( OriginalComponent ) => {
 
 				return {
 					selectedTerms: alertLevelTaxonomy
-						? getEditedPostAttribute( alertLevelTaxonomy.rest_base )
+						? getEditedPostAttribute(
+								alertLevelTaxonomy.rest_base
+						  ).filter( ( val ) => {
+								return Number( val );
+						  } )
 						: [],
 					terms:
 						getEntityRecords( 'taxonomy', slug, {
@@ -88,6 +92,14 @@ const setAlertLevel = ( OriginalComponent ) => {
 		// Update the post with the selected alert level.
 		const onChange = ( termID ) => {
 			const data = {};
+
+			if ( 0 === Number( termID ) ) {
+				setMeta( {
+					_hp_alert_has_expiration: false,
+					_hp_alert_display_through: '',
+				} );
+			}
+
 			data[ taxonomy.rest_base ] = [ parseInt( termID, 10 ) ];
 			editEntityRecord( 'postType', postType, postId, data );
 		};
@@ -101,33 +113,35 @@ const setAlertLevel = ( OriginalComponent ) => {
 					options={ termsList }
 					value={ selectedTerms }
 				/>
-				<RadioControl
-					label={ __( 'Alert expires' ) }
-					selected={ hasExpiration ? 'yes' : 'no' }
-					options={ [
-						{
-							label: 'Yes',
-							value: 'yes',
-						},
-						{
-							label: 'No',
-							value: 'no',
-						},
-					] }
-					onChange={ ( value ) => {
-						if ( 'no' === value ) {
-							setMeta( {
-								_hp_alert_has_expiration: false,
-								_hp_alert_display_through: '',
-							} );
-						} else {
-							setMeta( {
-								_hp_alert_has_expiration: true,
-							} );
-						}
-					} }
-				/>
-				{ hasExpiration && (
+				{ 0 < selectedTerms.length && (
+					<RadioControl
+						label={ __( 'Alert expires' ) }
+						selected={ hasExpiration ? 'yes' : 'no' }
+						options={ [
+							{
+								label: 'Yes',
+								value: 'yes',
+							},
+							{
+								label: 'No',
+								value: 'no',
+							},
+						] }
+						onChange={ ( value ) => {
+							if ( 'no' === value ) {
+								setMeta( {
+									_hp_alert_has_expiration: false,
+									_hp_alert_display_through: '',
+								} );
+							} else {
+								setMeta( {
+									_hp_alert_has_expiration: true,
+								} );
+							}
+						} }
+					/>
+				) }
+				{ 0 < selectedTerms.length && hasExpiration && (
 					<DateTimePicker
 						currentDate={ displayThroughValue }
 						onChange={ ( newDate ) => {
