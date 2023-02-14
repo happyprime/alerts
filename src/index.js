@@ -1,4 +1,8 @@
-import { DateTimePicker, SelectControl } from '@wordpress/components';
+import {
+	DateTimePicker,
+	RadioControl,
+	SelectControl,
+} from '@wordpress/components';
 import { store as coreStore, useEntityProp } from '@wordpress/core-data';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { addFilter } from '@wordpress/hooks';
@@ -67,11 +71,14 @@ const setAlertLevel = ( OriginalComponent ) => {
 		];
 
 		const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );
-		const { _hp_alert_display_through: displayThrough } = meta;
+		const {
+			_hp_alert_display_through: displayThrough,
+			_hp_alert_has_expiration: hasExpiration,
+		} = meta;
 
 		let displayThroughValue;
 
-		if ( 0 === displayThrough ) {
+		if ( ! displayThrough ) {
 			displayThroughValue = new Date();
 		} else {
 			// Prep the display through value for JS Date compatibility. Microseconds!
@@ -94,18 +101,47 @@ const setAlertLevel = ( OriginalComponent ) => {
 					options={ termsList }
 					value={ selectedTerms }
 				/>
-				<DateTimePicker
-					currentDate={ displayThroughValue }
-					onChange={ ( newDate ) => {
-						// Convert to a unix timestamp before storing. Milliseconds!
-						const storeDate = new Date( newDate ).getTime() / 1000;
-
-						setMeta( { _hp_alert_display_through: storeDate } );
+				<RadioControl
+					label={ __( 'Alert expires' ) }
+					selected={ hasExpiration ? 'yes' : 'no' }
+					options={ [
+						{
+							label: 'Yes',
+							value: 'yes',
+						},
+						{
+							label: 'No',
+							value: 'no',
+						},
+					] }
+					onChange={ ( value ) => {
+						if ( 'no' === value ) {
+							setMeta( {
+								_hp_alert_has_expiration: false,
+								_hp_alert_display_through: '',
+							} );
+						} else {
+							setMeta( {
+								_hp_alert_has_expiration: true,
+							} );
+						}
 					} }
-					is12Hour={ true }
-					__nextRemoveHelpButton={ true }
-					__nextRemoveResetButton={ true }
 				/>
+				{ hasExpiration && (
+					<DateTimePicker
+						currentDate={ displayThroughValue }
+						onChange={ ( newDate ) => {
+							// Convert to a unix timestamp before storing. Milliseconds!
+							const storeDate =
+								new Date( newDate ).getTime() / 1000;
+
+							setMeta( { _hp_alert_display_through: storeDate } );
+						} }
+						is12Hour={ true }
+						__nextRemoveHelpButton={ true }
+						__nextRemoveResetButton={ true }
+					/>
+				) }
 			</>
 		);
 	};

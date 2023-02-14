@@ -36,7 +36,7 @@ function get_post_types(): array {
 }
 
 /**
- * Register the meta key used to capture the display through date.
+ * Register the meta keys used to capture alert expiration data.
  */
 function register_meta() {
 	foreach ( get_post_types() as $post_type ) {
@@ -48,6 +48,18 @@ function register_meta() {
 				'auth_callback' => '__return_true',
 				'single'        => true,
 				'type'          => 'integer',
+			]
+		);
+
+		register_post_meta(
+			$post_type,
+			'_hp_alert_has_expiration',
+			[
+				'show_in_rest'  => true,
+				'auth_callback' => '__return_true',
+				'single'        => true,
+				'type'          => 'boolean',
+				'default'       => false,
 			]
 		);
 	}
