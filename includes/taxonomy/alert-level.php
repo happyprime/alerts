@@ -2,7 +2,7 @@
 /**
  * Manage the alert level taxonomy.
  *
- * @package alerts
+ * @package HP_Alerts
  */
 
 namespace HP\Alerts\Taxonomy\AlertLevel;
@@ -29,7 +29,7 @@ function register_taxonomy() {
 		get_slug(),
 		Alerts\get_post_types(),
 		[
-			'labels'       => [
+			'labels'            => [
 				'name'                       => 'Alert Levels',
 				'singular_name'              => 'Alert Level',
 				'search_items'               => 'Search Alert Levels',
@@ -44,10 +44,11 @@ function register_taxonomy() {
 				'not_found'                  => 'No levels found',
 				'no_terms'                   => 'No alert levels',
 			],
-			'public'       => true,
-			'hierarchical' => false,
-			'has_archive'  => false,
-			'show_in_rest' => true,
+			'public'            => true,
+			'hierarchical'      => false,
+			'has_archive'       => false,
+			'show_admin_column' => true,
+			'show_in_rest'      => true,
 		]
 	);
 }
