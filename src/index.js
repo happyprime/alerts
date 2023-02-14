@@ -69,8 +69,14 @@ const setAlertLevel = ( OriginalComponent ) => {
 		const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );
 		const { _hp_alert_display_through: displayThrough } = meta;
 
-		// Prep the display through value for JS Date compatibility. Microseconds!
-		const displayThroughValue = new Date( displayThrough * 1000 );
+		let displayThroughValue;
+
+		if ( 0 === displayThrough ) {
+			displayThroughValue = new Date();
+		} else {
+			// Prep the display through value for JS Date compatibility. Microseconds!
+			displayThroughValue = new Date( displayThrough * 1000 );
+		}
 
 		// Update the post with the selected alert level.
 		const onChange = ( termID ) => {
