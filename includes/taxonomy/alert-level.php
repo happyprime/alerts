@@ -63,6 +63,7 @@ function enqueue_block_editor_assets() {
 		'alert-level-box',
 		HP_ALERTS_PLUGIN_URL . '/build/index.js',
 		$asset_data['dependencies'],
-		$asset_data['version']
+		$asset_data['version'],
+		true
 	);
 }
