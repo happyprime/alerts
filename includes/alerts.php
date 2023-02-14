@@ -91,7 +91,7 @@ function check_expired() {
 		return;
 	}
 
-	$now = time() + 30;
+	$now = time();
 
 	foreach ( $current_alerts as $expiration ) {
 		if ( $now >= (int) $expiration ) {
