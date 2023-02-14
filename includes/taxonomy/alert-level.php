@@ -10,6 +10,7 @@ namespace HP\Alerts\Taxonomy\AlertLevel;
 use HP\Alerts;
 
 add_action( 'init', __NAMESPACE__ . '\register_taxonomy' );
+add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\enqueue_block_editor_assets' );
 
 /**
  * Provide the slug used to register the taxonomy.
@@ -48,5 +49,19 @@ function register_taxonomy() {
 			'has_archive'  => false,
 			'show_in_rest' => true,
 		]
+	);
+}
+
+/**
+ * Enqueue the script used to manage alert level assignment in the editor.
+ */
+function enqueue_block_editor_assets() {
+	$asset_data = require_once HP_ALERTS_PLUGIN_DIR . '/build/index.asset.php';
+
+	wp_enqueue_script(
+		'alert-level-box',
+		HP_ALERTS_PLUGIN_URL . '/build/index.js',
+		$asset_data['dependencies'],
+		$asset_data['version']
 	);
 }

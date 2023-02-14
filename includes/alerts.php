@@ -7,6 +7,7 @@
 
 namespace HP\Alerts;
 
+add_action( 'init', __NAMESPACE__ . '\register_meta' );
 add_action( 'save_post_alert', __NAMESPACE__ . '\save_post_meta', 10, 2 );
 add_action( 'wp_trash_post', __NAMESPACE__ . '\delete_alert_transient', 10 );
 add_action( 'wp_body_open', __NAMESPACE__ . '\display_alert_bar', 10 );
@@ -22,6 +23,22 @@ function get_post_types(): array {
 	);
 
 	return apply_filters( 'alerts_get_post_types', $post_types );
+}
+
+/**
+ * Register the meta key used to capture the display through date.
+ */
+function register_meta() {
+	foreach ( get_post_types() as $post_type ) {
+		register_post_meta(
+			$post_type,
+			'_hp_alert_display_through',
+			[
+				'show_in_rest'  => true,
+				'auth_callback' => '__return_true',
+			]
+		);
+	}
 }
 
 /**
