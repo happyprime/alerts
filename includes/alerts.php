@@ -15,9 +15,9 @@ add_action( 'init', __NAMESPACE__ . '\register_meta' );
  * @return array A list of post types.
  */
 function get_post_types(): array {
-	$post_types = array(
+	$post_types = [
 		'post',
-	);
+	];
 
 	/**
 	 * Filters the list of post types that support alerts.
@@ -26,7 +26,7 @@ function get_post_types(): array {
 	 *
 	 * @param string[] $post_types An array of post type keys.
 	 */
-	return apply_filters( 'alerts_get_post_types', $post_types );
+	return apply_filters( 'hp_alerts_get_post_types', $post_types );
 }
 
 /**
