@@ -142,6 +142,20 @@ function display_edit_form_fields( \WP_Term $term ) {
 }
 
 /**
+ * Retrieve the current default alert level term ID.
+ *
+ * @return int The default alert level term ID.
+ */
+function get_default_term_id(): int {
+	global $wpdb;
+
+	$terms = $wpdb->get_results( "SELECT term_id FROM $wpdb->termmeta WHERE meta_key = 'hp_alert_level_default'" );
+	$terms = wp_list_pluck( $terms, 'term_id' );
+
+	return (int) array_pop( $terms );
+}
+
+/**
  * Clear the database and cache of any previous alert level default setting.
  */
 function clear_term_meta() {
