@@ -103,7 +103,7 @@ function enqueue_block_editor_assets() {
 }
 
 /**
- * Display a custom field when adding an aggregate term.
+ * Display a custom field when adding an alert level term.
  */
 function display_add_form_fields() {
 	wp_nonce_field( 'save_alert_level_meta', 'alert_level_meta' );
@@ -120,7 +120,7 @@ function display_add_form_fields() {
 }
 
 /**
- * Display a custom field when editing an aggregate term.
+ * Display a custom field when editing an alert level term.
  *
  * @param \WP_Term $term Current taxonomy term object.
  */
