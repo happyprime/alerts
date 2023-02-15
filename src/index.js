@@ -59,17 +59,12 @@ const setAlertLevel = ( OriginalComponent ) => {
 			slug
 		);
 		const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );
-		const {
-			_hp_alert_display_through: displayThrough,
-			_hp_alert_has_expiration: hasExpiration,
-		} = meta;
+		const { _hp_alert_display_through: displayThrough } = meta;
 
 		let displayThroughValue;
 
-		if ( ! displayThrough ) {
-			displayThroughValue = new Date();
-		} else {
-			// Prep the display through value for JS Date compatibility. Microseconds!
+		// Prep the display through value for JS Date compatibility. Microseconds!
+		if ( displayThrough ) {
 			displayThroughValue = new Date( displayThrough * 1000 );
 		}
 
@@ -77,7 +72,6 @@ const setAlertLevel = ( OriginalComponent ) => {
 		const onChange = ( termID ) => {
 			if ( 0 === Number( termID ) ) {
 				setMeta( {
-					_hp_alert_has_expiration: false,
 					_hp_alert_display_through: 0,
 				} );
 				setAlertLevels( [] );
@@ -98,7 +92,7 @@ const setAlertLevel = ( OriginalComponent ) => {
 				{ 0 < alertLevels.length && (
 					<RadioControl
 						label={ __( 'Alert expires' ) }
-						selected={ hasExpiration ? 'yes' : 'no' }
+						selected={ displayThrough ? 'yes' : 'no' }
 						options={ [
 							{
 								label: 'Yes',
@@ -112,24 +106,29 @@ const setAlertLevel = ( OriginalComponent ) => {
 						onChange={ ( value ) => {
 							if ( 'no' === value ) {
 								setMeta( {
-									_hp_alert_has_expiration: false,
 									_hp_alert_display_through: 0,
 								} );
 							} else {
+								// Convert to a unix timestamp before storing. Milliseconds!
+								const storeDate = Math.round(
+									new Date().getTime() / 1000
+								);
+
 								setMeta( {
-									_hp_alert_has_expiration: true,
+									_hp_alert_display_through: storeDate,
 								} );
 							}
 						} }
 					/>
 				) }
-				{ 0 < alertLevels.length && hasExpiration && (
+				{ 0 < alertLevels.length && 0 !== displayThrough && (
 					<DateTimePicker
 						currentDate={ displayThroughValue }
 						onChange={ ( newDate ) => {
 							// Convert to a unix timestamp before storing. Milliseconds!
-							const storeDate =
-								new Date( newDate ).getTime() / 1000;
+							const storeDate = Math.round(
+								new Date( newDate ).getTime() / 1000
+							);
 
 							setMeta( { _hp_alert_display_through: storeDate } );
 						} }
