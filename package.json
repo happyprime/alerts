@@ -1,0 +1,30 @@
+{
+	"name": "alerts",
+	"version": "2.0.0",
+	"description": "",
+	"author": "Happy Prime",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"plugin",
+		"wordpress",
+		"alerts"
+	],
+	"homepage": "https://github.com/happyprime/alerts/",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/happyprime/alerts.git"
+	},
+	"bugs": {
+		"url": "https://github.com/happyprime/alerts/"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^25.3.0"
+	},
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"lint:js": "wp-scripts lint-js ",
+		"fix:js": "wp-scripts lint-js  --fix",
+		"lint:pkg-json": "wp-scripts lint-pkg-json"
+	}
+}

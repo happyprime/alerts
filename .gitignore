@@ -1,2 +1,6 @@
 # Ignore all 3rd party libraries.
 /vendor/
+/node_modules/
+
+# Ignore the JS build directory.
+/build/
