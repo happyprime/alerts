@@ -4,7 +4,7 @@ import {
 	SelectControl,
 } from '@wordpress/components';
 import { store as coreStore, useEntityProp } from '@wordpress/core-data';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useSelect } from '@wordpress/data';
 import { addFilter } from '@wordpress/hooks';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
@@ -18,45 +18,24 @@ const setAlertLevel = ( OriginalComponent ) => {
 			return <OriginalComponent { ...props } />;
 		}
 
-		const { editEntityRecord } = useDispatch( 'core' );
+		const { terms, postType } = useSelect( ( select ) => {
+			const { getEntityRecords } = select( coreStore );
 
-		const { selectedTerms, terms, taxonomy, postType, postId } = useSelect(
-			( select ) => {
-				const { getTaxonomy, getEntityRecords } = select( coreStore );
+			// Get information about the current post.
+			const { getCurrentPostType } = select( 'core/editor' );
 
-				// Get the full alert level taxonomy object.
-				const alertLevelTaxonomy = getTaxonomy( slug );
-
-				// Get information about the current post.
-				const {
-					getEditedPostAttribute,
-					getCurrentPostType,
-					getCurrentPostId,
-				} = select( 'core/editor' );
-
-				return {
-					selectedTerms: alertLevelTaxonomy
-						? getEditedPostAttribute(
-								alertLevelTaxonomy.rest_base
-						  ).filter( ( val ) => {
-								return Number( val );
-						  } )
-						: [],
-					terms:
-						getEntityRecords( 'taxonomy', slug, {
-							per_page: -1,
-							orderby: 'name',
-							order: 'asc',
-							_fields: 'id,name',
-							context: 'view',
-						} ) || [],
-					taxonomy: alertLevelTaxonomy,
-					postType: getCurrentPostType(),
-					postId: getCurrentPostId(),
-				};
-			},
-			[]
-		);
+			return {
+				terms:
+					getEntityRecords( 'taxonomy', slug, {
+						per_page: -1,
+						orderby: 'name',
+						order: 'asc',
+						_fields: 'id,name',
+						context: 'view',
+					} ) || [],
+				postType: getCurrentPostType(),
+			};
+		}, [] );
 
 		// Parse available terms into a structure expected by the Select interface.
 		const termData = terms.map( ( term ) => {
@@ -74,6 +53,11 @@ const setAlertLevel = ( OriginalComponent ) => {
 			...termData,
 		];
 
+		const [ alertLevels, setAlertLevels ] = useEntityProp(
+			'postType',
+			postType,
+			slug
+		);
 		const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );
 		const {
 			_hp_alert_display_through: displayThrough,
@@ -91,17 +75,15 @@ const setAlertLevel = ( OriginalComponent ) => {
 
 		// Update the post with the selected alert level.
 		const onChange = ( termID ) => {
-			const data = {};
-
 			if ( 0 === Number( termID ) ) {
 				setMeta( {
 					_hp_alert_has_expiration: false,
-					_hp_alert_display_through: '',
+					_hp_alert_display_through: 0,
 				} );
+				setAlertLevels( [] );
+			} else {
+				setAlertLevels( [ parseInt( termID, 10 ) ] );
 			}
-
-			data[ taxonomy.rest_base ] = [ parseInt( termID, 10 ) ];
-			editEntityRecord( 'postType', postType, postId, data );
 		};
 
 		return (
@@ -111,9 +93,9 @@ const setAlertLevel = ( OriginalComponent ) => {
 					multiple={ false }
 					onChange={ onChange }
 					options={ termsList }
-					value={ selectedTerms }
+					value={ alertLevels }
 				/>
-				{ 0 < selectedTerms.length && (
+				{ 0 < alertLevels.length && (
 					<RadioControl
 						label={ __( 'Alert expires' ) }
 						selected={ hasExpiration ? 'yes' : 'no' }
@@ -131,7 +113,7 @@ const setAlertLevel = ( OriginalComponent ) => {
 							if ( 'no' === value ) {
 								setMeta( {
 									_hp_alert_has_expiration: false,
-									_hp_alert_display_through: '',
+									_hp_alert_display_through: 0,
 								} );
 							} else {
 								setMeta( {
@@ -141,7 +123,7 @@ const setAlertLevel = ( OriginalComponent ) => {
 						} }
 					/>
 				) }
-				{ 0 < selectedTerms.length && hasExpiration && (
+				{ 0 < alertLevels.length && hasExpiration && (
 					<DateTimePicker
 						currentDate={ displayThroughValue }
 						onChange={ ( newDate ) => {
