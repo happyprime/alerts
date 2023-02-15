@@ -47,7 +47,7 @@ const setAlertLevel = ( OriginalComponent ) => {
 
 		const termsList = [
 			{
-				label: __( 'Select level' ),
+				label: __( 'Select level', 'hp-alerts' ),
 				value: 0,
 			},
 			...termData,
@@ -83,7 +83,7 @@ const setAlertLevel = ( OriginalComponent ) => {
 		return (
 			<>
 				<SelectControl
-					label={ __( 'Alert level' ) }
+					label={ __( 'Alert level', 'hp-alerts' ) }
 					multiple={ false }
 					onChange={ onChange }
 					options={ termsList }
@@ -91,15 +91,15 @@ const setAlertLevel = ( OriginalComponent ) => {
 				/>
 				{ 0 < alertLevels.length && (
 					<RadioControl
-						label={ __( 'Alert expires' ) }
+						label={ __( 'Alert expires', 'hp-alerts' ) }
 						selected={ displayThrough ? 'yes' : 'no' }
 						options={ [
 							{
-								label: 'Yes',
+								label: __( 'Yes', 'hp-alerts' ),
 								value: 'yes',
 							},
 							{
-								label: 'No',
+								label: __( 'No', 'hp-alerts' ),
 								value: 'no',
 							},
 						] }
