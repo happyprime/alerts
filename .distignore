@@ -1,5 +1,5 @@
-.git
-.github
+.git/
+.github/
 .gitignore
 .distignore
 composer.json
@@ -7,5 +7,5 @@ composer.lock
 phpcs.xml
 package.json
 package-lock.json
-/node_modules
-/vendor
+node_modules/
+vendor/
