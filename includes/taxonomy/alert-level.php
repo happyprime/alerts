@@ -114,7 +114,7 @@ function display_add_form_fields() {
 			<label for="alert-level-default"><?php esc_html_e( 'Default alert level', 'hp-alerts' ); ?></label>
 			<input type="checkbox" name="alert_level_default" id="alert-level-default" aria-describedby="alert-level-default-description" />
 		</span>
-		<p class="description" id="alert-level-default-description"><?php esc_html_e( 'Checking this box will set this alert level as default and clear the setting from other levels.' ); ?></p>
+		<p class="description" id="alert-level-default-description"><?php esc_html_e( 'Checking this box will set this alert level as default and clear the setting from other levels.', 'hp-alerts' ); ?></p>
 	</div>
 	<?php
 }
@@ -135,7 +135,7 @@ function display_edit_form_fields( \WP_Term $term ) {
 		</th>
 		<td>
 			<input type="checkbox" name="alert_level_default" id="alert-level-default" aria-describedby="alert-level-default-description" <?php checked( $checked ); ?> />
-			<p class="description" id="alert-level-default-description"><?php esc_html_e( 'Checking this box will set this alert level as default and clear the setting from other levels.' ); ?></p>
+			<p class="description" id="alert-level-default-description"><?php esc_html_e( 'Checking this box will set this alert level as default and clear the setting from other levels.', 'hp-alerts' ); ?></p>
 		</td>
 	</tr>
 	<?php

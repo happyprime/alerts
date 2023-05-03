@@ -1,7 +1,7 @@
 {
 	"name": "happyprime-alerts",
-	"version": "2.0.0",
-	"description": "",
+	"version": "2.0.0-beta",
+	"description": "Display alerts of various levels for a given amount of time.",
 	"author": "Happy Prime",
 	"license": "GPL-2.0-or-later",
 	"keywords": [
@@ -18,7 +18,7 @@
 		"url": "https://github.com/happyprime/alerts/"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^25.3.0"
+		"@wordpress/scripts": "^26.3.0"
 	},
 	"scripts": {
 		"build": "wp-scripts build",
