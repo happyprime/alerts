@@ -1,7 +1,7 @@
 {
 	"name": "happyprime-alerts",
 	"version": "2.0.0",
-	"description": "",
+	"description": "Display alerts of various levels for a given amount of time.",
 	"author": "Happy Prime",
 	"license": "GPL-2.0-or-later",
 	"keywords": [
