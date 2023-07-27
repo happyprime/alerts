@@ -18,7 +18,7 @@
 		"url": "https://github.com/happyprime/alerts/"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^26.3.0"
+		"@wordpress/scripts": "^26.9.0"
 	},
 	"scripts": {
 		"build": "wp-scripts build",
