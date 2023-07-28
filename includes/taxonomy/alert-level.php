@@ -180,6 +180,8 @@ function save_term_meta( int $term_id ) {
 		return;
 	}
 
+	// If the default checkbox has been selected, clear the previous default
+	// and set this term as the new default.
 	if ( isset( $_POST['alert_level_default'] ) ) {
 		clear_term_meta();
 
@@ -187,6 +189,12 @@ function save_term_meta( int $term_id ) {
 			$term_id,
 			'hp_alert_level_default',
 			true
+		);
+	} else {
+		// If the checkbox is not selected, assume the term is not the default.
+		delete_term_meta(
+			$term_id,
+			'hp_alert_level_default'
 		);
 	}
 }
