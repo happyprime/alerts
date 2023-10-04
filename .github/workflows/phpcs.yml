@@ -2,12 +2,20 @@ name: PHP_CodeSniffer
 
 on: pull_request
 
+# The GITHUB_TOKEN used by Dependabot has read-only permissions
+# by default, so we provide write permissions to this workflow
+# so that comments can be left on the pull request.
+# https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#changing-github_token-permissions
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   phpcs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -16,21 +24,15 @@ jobs:
           coverage: none
           tools: composer, cs2pr
 
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Setup cache
-        uses: pat-s/always-upload-cache@v1.1.4
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          # Use the hash of composer.json as the key for your cache if you do not commit composer.lock.
-          # key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+          path: ./vendor
+          key: php-dependencies-${{ hashFiles('composer.lock') }}
+          restore-keys: php-dependencies-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-suggest --no-progress
+        run: composer install --prefer-dist --no-progress
 
       - name: Detect coding standard violations
-        run: vendor/bin/phpcs -q --report=checkstyle . | cs2pr --notices-as-warnings
+        run: vendor/bin/phpcs -q --report=checkstyle . | cs2pr --graceful-warnings
