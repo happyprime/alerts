@@ -4,25 +4,25 @@
 	"version": "2.0.0",
 	"type": "wordpress-plugin",
 	"license": "GPLv2-or-later",
+	"minimum-stability": "stable",
 	"config": {
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true,
 			"composer/installers": true
+		},
+		"platform": {
+			"php": "8.0"
 		}
 	},
 	"require-dev": {
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-		"phpcompatibility/php-compatibility": "^9.3",
+		"dealerdirect/phpcodesniffer-composer-installer": "*",
+		"phpcompatibility/php-compatibility": "dev-develop as 9.99.9",
 		"phpcompatibility/phpcompatibility-wp": "*",
-		"phpunit/phpunit": "^5 || ^7 || ^8 || ^9",
-		"sirbrillig/phpcs-variable-analysis": "^2.11",
-		"yoast/phpunit-polyfills": "^1.0",
-		"wp-cli/dist-archive-command": "^2.0",
-		"wp-coding-standards/wpcs": "dev-develop"
+		"sirbrillig/phpcs-variable-analysis": "*",
+		"wp-coding-standards/wpcs": "*"
 	},
 	"scripts": {
 		"phpcs": "vendor/bin/phpcs",
-		"phpcbf": "vendor/bin/phpcbf",
-		"test": "vendor/bin/phpunit"
+		"phpcbf": "vendor/bin/phpcbf"
 	}
 }
