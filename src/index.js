@@ -79,6 +79,7 @@ const setAlertLevel = ( OriginalComponent ) => {
 			if ( 0 === Number( termID ) ) {
 				setMeta( {
 					_hp_alert_display_through: 0,
+					_hp_alert_title: '',
 				} );
 				setAlertLevels( [] );
 			} else {
@@ -104,9 +105,7 @@ const setAlertLevel = ( OriginalComponent ) => {
 							) }
 							label={ __( 'Title (optional)', 'hp-alerts' ) }
 							onChange={ ( value ) =>
-								setMeta( {
-									_hp_alert_title: value,
-								} )
+								setMeta( { _hp_alert_title: value } )
 							}
 							value={ title }
 						/>
@@ -125,9 +124,7 @@ const setAlertLevel = ( OriginalComponent ) => {
 							] }
 							onChange={ ( value ) => {
 								if ( 'no' === value ) {
-									setMeta( {
-										_hp_alert_display_through: 0,
-									} );
+									setMeta( { _hp_alert_display_through: 0 } );
 								} else {
 									// Convert to a unix timestamp before storing. Milliseconds!
 									const storeDate = Math.round(
