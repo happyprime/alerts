@@ -10,6 +10,8 @@ import { addFilter } from '@wordpress/hooks';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
 
+import './editor.css';
+
 const setAlertLevel = ( OriginalComponent ) => {
 	return ( props ) => {
 		const { slug } = props;
@@ -85,7 +87,7 @@ const setAlertLevel = ( OriginalComponent ) => {
 		};
 
 		return (
-			<>
+			<div className="hp-alert-settings">
 				<SelectControl
 					label={ __( 'Alert level', 'hp-alerts' ) }
 					multiple={ false }
@@ -156,7 +158,7 @@ const setAlertLevel = ( OriginalComponent ) => {
 						__nextRemoveResetButton={ true }
 					/>
 				) }
-			</>
+			</div>
 		);
 	};
 };

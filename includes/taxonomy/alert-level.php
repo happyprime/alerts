@@ -100,6 +100,13 @@ function enqueue_block_editor_assets() {
 		$asset_data['version'],
 		true
 	);
+
+	wp_enqueue_style(
+		'alert-level-box',
+		HP_ALERTS_PLUGIN_URL . '/build/index.css',
+		array(),
+		$asset_data['version']
+	);
 }
 
 /**
