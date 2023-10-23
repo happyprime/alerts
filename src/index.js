@@ -2,6 +2,7 @@ import {
 	DateTimePicker,
 	RadioControl,
 	SelectControl,
+	TextareaControl,
 } from '@wordpress/components';
 import { store as coreStore, useEntityProp } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
@@ -59,7 +60,10 @@ const setAlertLevel = ( OriginalComponent ) => {
 			slug
 		);
 		const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );
-		const { _hp_alert_display_through: displayThrough } = meta;
+		const {
+			_hp_alert_display_through: displayThrough,
+			_hp_alert_title: title,
+		} = meta;
 
 		let displayThroughValue;
 
@@ -90,36 +94,51 @@ const setAlertLevel = ( OriginalComponent ) => {
 					value={ alertLevels }
 				/>
 				{ 0 < alertLevels.length && (
-					<RadioControl
-						label={ __( 'Alert expires', 'hp-alerts' ) }
-						selected={ displayThrough ? 'yes' : 'no' }
-						options={ [
-							{
-								label: __( 'Yes', 'hp-alerts' ),
-								value: 'yes',
-							},
-							{
-								label: __( 'No', 'hp-alerts' ),
-								value: 'no',
-							},
-						] }
-						onChange={ ( value ) => {
-							if ( 'no' === value ) {
+					<>
+						<TextareaControl
+							help={ __(
+								'Override the displayed title. The post title is displayed by default.',
+								'hp-alerts'
+							) }
+							label={ __( 'Title (optional)', 'hp-alerts' ) }
+							onChange={ ( value ) =>
 								setMeta( {
-									_hp_alert_display_through: 0,
-								} );
-							} else {
-								// Convert to a unix timestamp before storing. Milliseconds!
-								const storeDate = Math.round(
-									new Date().getTime() / 1000
-								);
-
-								setMeta( {
-									_hp_alert_display_through: storeDate,
-								} );
+									_hp_alert_title: value,
+								} )
 							}
-						} }
-					/>
+							value={ title }
+						/>
+						<RadioControl
+							label={ __( 'Alert expires', 'hp-alerts' ) }
+							selected={ displayThrough ? 'yes' : 'no' }
+							options={ [
+								{
+									label: __( 'Yes', 'hp-alerts' ),
+									value: 'yes',
+								},
+								{
+									label: __( 'No', 'hp-alerts' ),
+									value: 'no',
+								},
+							] }
+							onChange={ ( value ) => {
+								if ( 'no' === value ) {
+									setMeta( {
+										_hp_alert_display_through: 0,
+									} );
+								} else {
+									// Convert to a unix timestamp before storing. Milliseconds!
+									const storeDate = Math.round(
+										new Date().getTime() / 1000
+									);
+
+									setMeta( {
+										_hp_alert_display_through: storeDate,
+									} );
+								}
+							} }
+						/>
+					</>
 				) }
 				{ 0 < alertLevels.length && 0 !== displayThrough && (
 					<DateTimePicker
