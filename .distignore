@@ -5,6 +5,7 @@
 composer.json
 composer.lock
 phpcs.xml
+phpstan.neon.dist
 package.json
 package-lock.json
 node_modules/
