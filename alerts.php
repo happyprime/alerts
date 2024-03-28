@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Alerts
  * Plugin URI: https://github.com/happyprime/alerts
- * Description: Display alerts of various levels for a given amount of time.
- * Version: 2.0.0
+ * Description: Create manageable alert banners using the query loop.
+ * Version: 2.0.1
  * Requires at least: 6.1
  * Requires PHP: 7.4
  * Author: Happy Prime

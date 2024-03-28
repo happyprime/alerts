@@ -1,7 +1,7 @@
 {
 	"name": "happyprime-alerts",
-	"version": "2.0.0",
-	"description": "Display alerts of various levels for a given amount of time.",
+	"version": "2.0.1",
+	"description": "Create manageable alert banners using the query loop.",
 	"author": "Happy Prime",
 	"license": "GPL-2.0-or-later",
 	"keywords": [
