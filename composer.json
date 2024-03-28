@@ -8,21 +8,20 @@
 	"config": {
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true,
-			"composer/installers": true
+			"composer/installers": true,
+			"phpstan/extension-installer": true
 		},
 		"platform": {
-			"php": "8.0"
+			"php": "7.4"
 		}
 	},
 	"require-dev": {
-		"dealerdirect/phpcodesniffer-composer-installer": "*",
-		"phpcompatibility/php-compatibility": "dev-develop as 9.99.9",
-		"phpcompatibility/phpcompatibility-wp": "*",
-		"sirbrillig/phpcs-variable-analysis": "*",
-		"wp-coding-standards/wpcs": "*"
+		"happyprime/coding-standards": "*",
+		"phpcompatibility/php-compatibility": "dev-develop as 9.99.99"
 	},
 	"scripts": {
 		"phpcs": "vendor/bin/phpcs",
-		"phpcbf": "vendor/bin/phpcbf"
+		"phpcbf": "vendor/bin/phpcbf",
+		"phpstan": "vendor/bin/phpstan analyse --memory-limit=2048M"
 	}
 }

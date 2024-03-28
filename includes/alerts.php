@@ -18,7 +18,7 @@ add_action( 'hp_alerts_process_expired', __NAMESPACE__ . '\process_expired' );
 /**
  * Retrieve the post types with Alerts support.
  *
- * @return array A list of post types.
+ * @return string[] A list of post types.
  */
 function get_post_types(): array {
 	$post_types = [
@@ -38,7 +38,7 @@ function get_post_types(): array {
 /**
  * Register the meta keys used to capture alert expiration data.
  */
-function register_meta() {
+function register_meta(): void {
 	foreach ( get_post_types() as $post_type ) {
 		register_post_meta(
 			$post_type,
@@ -62,7 +62,7 @@ function register_meta() {
  * @param string $meta_key   The current meta key.
  * @param mixed  $meta_value The meta value being stored.
  */
-function store_display_through( $meta_id, $post_id, $meta_key, $meta_value ) {
+function store_display_through( $meta_id, $post_id, $meta_key, $meta_value ): void {
 	if ( '_hp_alert_display_through' !== $meta_key ) {
 		return;
 	}
@@ -80,7 +80,7 @@ function store_display_through( $meta_id, $post_id, $meta_key, $meta_value ) {
 /**
  * Check current alerts on shutdown and schedule an event to clear any expired.
  */
-function check_expired() {
+function check_expired(): void {
 	if ( wp_next_scheduled( 'hp_alerts_process_expired' ) ) {
 		return;
 	}
@@ -103,7 +103,7 @@ function check_expired() {
 /**
  * Process expired alerts.
  */
-function process_expired() {
+function process_expired(): void {
 	global $wpdb;
 
 	$alerts = $wpdb->get_results( "SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key = '_hp_alert_display_through'" );

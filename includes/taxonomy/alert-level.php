@@ -29,7 +29,7 @@ function get_slug(): string {
 /**
  * Register the alert level taxonomy.
  */
-function register_taxonomy() {
+function register_taxonomy(): void {
 	\register_taxonomy(
 		get_slug(),
 		Alerts\get_post_types(),
@@ -62,8 +62,8 @@ function register_taxonomy() {
  * Filter the body class to include the alert level when viewing a single
  * supported post type.
  *
- * @param array $classes List of class names to apply to the body element.
- * @return array Modified list of class names.
+ * @param string[] $classes List of class names to apply to the body element.
+ * @return string[] Modified list of class names.
  */
 function filter_body_class( array $classes ): array {
 	if ( ! is_singular( Alerts\get_post_types() ) ) {
@@ -90,7 +90,7 @@ function filter_body_class( array $classes ): array {
 /**
  * Enqueue the script used to manage alert level assignment in the editor.
  */
-function enqueue_block_editor_assets() {
+function enqueue_block_editor_assets(): void {
 	$asset_data = require_once HP_ALERTS_PLUGIN_DIR . '/build/index.asset.php';
 
 	wp_enqueue_script(
@@ -105,7 +105,7 @@ function enqueue_block_editor_assets() {
 /**
  * Display a custom field when adding an alert level term.
  */
-function display_add_form_fields() {
+function display_add_form_fields(): void {
 	wp_nonce_field( 'save_alert_level_meta', 'alert_level_meta' );
 	?>
 	<div class="form-field">
@@ -124,7 +124,7 @@ function display_add_form_fields() {
  *
  * @param \WP_Term $term Current taxonomy term object.
  */
-function display_edit_form_fields( \WP_Term $term ) {
+function display_edit_form_fields( \WP_Term $term ): void {
 	$checked = get_term_meta( $term->term_id, 'hp_alert_level_default', true );
 
 	wp_nonce_field( 'save_alert_level_meta', 'alert_level_meta' );
@@ -158,7 +158,7 @@ function get_default_term_id(): int {
 /**
  * Clear the database and cache of any previous alert level default setting.
  */
-function clear_term_meta() {
+function clear_term_meta(): void {
 	global $wpdb;
 
 	$terms = $wpdb->get_results( "SELECT term_id FROM $wpdb->termmeta WHERE meta_key = 'hp_alert_level_default'" );
@@ -175,7 +175,7 @@ function clear_term_meta() {
  *
  * @param int $term_id The term ID.
  */
-function save_term_meta( int $term_id ) {
+function save_term_meta( int $term_id ): void {
 	if ( ! isset( $_POST['alert_level_meta'] ) || ! wp_verify_nonce( $_POST['alert_level_meta'], 'save_alert_level_meta' ) ) {
 		return;
 	}
