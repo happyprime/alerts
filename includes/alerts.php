@@ -50,6 +50,17 @@ function register_meta(): void {
 				'type'          => 'integer',
 			]
 		);
+
+		register_post_meta(
+			$post_type,
+			'_hp_alert_title',
+			[
+				'show_in_rest'  => true,
+				'auth_callback' => '__return_true',
+				'single'        => true,
+				'type'          => 'string',
+			]
+		);
 	}
 }
 
