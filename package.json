@@ -1,6 +1,6 @@
 {
 	"name": "happyprime-alerts",
-	"version": "2.0.1",
+	"version": "2.1.0",
 	"description": "Create manageable alert banners using the query loop.",
 	"author": "Happy Prime",
 	"license": "GPL-2.0-or-later",
