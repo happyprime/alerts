@@ -9,7 +9,7 @@ namespace HP\Alerts\Taxonomy\AlertLevel;
 
 use HP\Alerts;
 
-add_action( 'init', __NAMESPACE__ . '\register_taxonomy' );
+add_action( 'init', __NAMESPACE__ . '\register_taxonomy', 300 );
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\enqueue_block_editor_assets' );
 add_filter( 'body_class', __NAMESPACE__ . '\filter_body_class' );
 add_action( get_slug() . '_edit_form_fields', __NAMESPACE__ . '\display_edit_form_fields' );

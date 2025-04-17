@@ -9,7 +9,7 @@ namespace HP\Alerts;
 
 use HP\Alerts\Taxonomy\AlertLevel;
 
-add_action( 'init', __NAMESPACE__ . '\register_meta' );
+add_action( 'init', __NAMESPACE__ . '\register_meta', 300 );
 add_action( 'updated_post_meta', __NAMESPACE__ . '\store_display_through', 10, 4 );
 add_action( 'added_post_meta', __NAMESPACE__ . '\store_display_through', 10, 4 );
 add_action( 'shutdown', __NAMESPACE__ . '\check_expired' );
@@ -32,7 +32,22 @@ function get_post_types(): array {
 	 *
 	 * @param string[] $post_types An array of post type keys.
 	 */
-	return apply_filters( 'hp_alerts_get_post_types', $post_types );
+	$post_types = apply_filters( 'hp_alerts_get_post_types', $post_types );
+
+	/**
+	 * Ensure the post type supports custom fields.
+	 *
+	 * If custom fields are not supported, and the custom fields interface is
+	 * displayed in the block editor, then the editor will crash when we load
+	 * the meta boxes. Strange things afoot!
+	 */
+	foreach ( $post_types as $key => $post_type ) {
+		if ( ! post_type_supports( $post_type, 'custom-fields' ) ) {
+			unset( $post_types[ $key ] );
+		}
+	}
+
+	return $post_types;
 }
 
 /**
