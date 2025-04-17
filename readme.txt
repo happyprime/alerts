@@ -6,6 +6,7 @@ Tested up to: 6.8
 Stable tag: 2.1.0
 License: GPLv2 or later
 Requires PHP: 7.4
+Update URI: false
 
 Create manageable alert banners using the query loop.
 
