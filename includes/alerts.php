@@ -50,6 +50,17 @@ function register_meta(): void {
 				'type'          => 'integer',
 			]
 		);
+
+		register_post_meta(
+			$post_type,
+			'_hp_alert_title',
+			[
+				'show_in_rest'  => true,
+				'auth_callback' => '__return_true',
+				'single'        => true,
+				'type'          => 'string',
+			]
+		);
 	}
 }
 
@@ -67,11 +78,18 @@ function store_display_through( $meta_id, $post_id, $meta_key, $meta_value ): vo
 		return;
 	}
 
-	if ( ! in_array( get_post( $post_id )->post_type, get_post_types(), true ) ) {
+	$post = get_post( $post_id );
+
+	if ( ! $post || ! in_array( $post->post_type, get_post_types(), true ) ) {
 		return;
 	}
 
-	$current_alerts             = get_transient( 'hp_active_alerts' );
+	$current_alerts = get_transient( 'hp_active_alerts' );
+
+	if ( ! is_array( $current_alerts ) ) {
+		$current_alerts = [];
+	}
+
 	$current_alerts[ $post_id ] = $meta_value;
 
 	set_transient( 'hp_active_alerts', $current_alerts );
@@ -87,7 +105,7 @@ function check_expired(): void {
 
 	$current_alerts = get_transient( 'hp_active_alerts' );
 
-	if ( ! $current_alerts ) {
+	if ( ! is_array( $current_alerts ) ) {
 		return;
 	}
 

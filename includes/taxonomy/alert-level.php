@@ -80,6 +80,10 @@ function filter_body_class( array $classes ): array {
 		]
 	);
 
+	if ( is_wp_error( $levels ) ) {
+		return $classes;
+	}
+
 	foreach ( $levels as $level ) {
 		$classes[] = 'has-alert-level-' . $level;
 	}
@@ -99,6 +103,13 @@ function enqueue_block_editor_assets(): void {
 		$asset_data['dependencies'],
 		$asset_data['version'],
 		true
+	);
+
+	wp_enqueue_style(
+		'alert-level-box',
+		HP_ALERTS_PLUGIN_URL . '/build/index.css',
+		array(),
+		$asset_data['version']
 	);
 }
 
