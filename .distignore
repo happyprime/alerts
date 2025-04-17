@@ -2,6 +2,7 @@
 .github/
 .gitignore
 .distignore
+.eslintrc.js
 composer.json
 composer.lock
 phpcs.xml
