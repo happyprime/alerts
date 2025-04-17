@@ -1,5 +1,6 @@
 includes:
   - %rootDir%/../../happyprime/coding-standards/phpstan.neon.dist
-
 parameters:
-  level: 6
+  level: 9
+  bootstrapFiles:
+    - alerts.php

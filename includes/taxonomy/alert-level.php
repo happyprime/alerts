@@ -80,6 +80,10 @@ function filter_body_class( array $classes ): array {
 		]
 	);
 
+	if ( is_wp_error( $levels ) ) {
+		return $classes;
+	}
+
 	foreach ( $levels as $level ) {
 		$classes[] = 'has-alert-level-' . $level;
 	}

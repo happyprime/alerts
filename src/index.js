@@ -21,24 +21,27 @@ const setAlertLevel = ( OriginalComponent ) => {
 			return <OriginalComponent { ...props } />;
 		}
 
-		const { terms, postType } = useSelect( ( select ) => {
-			const { getEntityRecords } = select( coreStore );
+		const { terms, postType } = useSelect(
+			( select ) => {
+				const { getEntityRecords } = select( coreStore );
 
-			// Get information about the current post.
-			const { getCurrentPostType } = select( 'core/editor' );
+				// Get information about the current post.
+				const { getCurrentPostType } = select( 'core/editor' );
 
-			return {
-				terms:
-					getEntityRecords( 'taxonomy', slug, {
-						per_page: -1,
-						orderby: 'name',
-						order: 'asc',
-						_fields: 'id,name',
-						context: 'view',
-					} ) || [],
-				postType: getCurrentPostType(),
-			};
-		}, [] );
+				return {
+					terms:
+						getEntityRecords( 'taxonomy', slug, {
+							per_page: -1,
+							orderby: 'name',
+							order: 'asc',
+							_fields: 'id,name',
+							context: 'view',
+						} ) || [],
+					postType: getCurrentPostType(),
+				};
+			},
+			[ slug ]
+		);
 
 		// Parse available terms into a structure expected by the Select interface.
 		const termData = terms.map( ( term ) => {
@@ -87,6 +90,9 @@ const setAlertLevel = ( OriginalComponent ) => {
 			}
 		};
 
+		// Get the first term ID from the array, or 0 if none selected
+		const selectedValue = alertLevels?.[ 0 ] || 0;
+
 		return (
 			<div className="hp-alert-settings">
 				<SelectControl
@@ -94,9 +100,9 @@ const setAlertLevel = ( OriginalComponent ) => {
 					multiple={ false }
 					onChange={ onChange }
 					options={ termsList }
-					value={ alertLevels }
+					value={ selectedValue }
 				/>
-				{ 0 < alertLevels.length && (
+				{ selectedValue > 0 && (
 					<>
 						<TextareaControl
 							help={ __(
@@ -139,7 +145,7 @@ const setAlertLevel = ( OriginalComponent ) => {
 						/>
 					</>
 				) }
-				{ 0 < alertLevels.length && 0 !== displayThrough && (
+				{ selectedValue > 0 && 0 !== displayThrough && (
 					<DateTimePicker
 						currentDate={ displayThroughValue }
 						onChange={ ( newDate ) => {

@@ -15,9 +15,8 @@
  *  @package HP_Alerts
  */
 
-// If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-	die;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 define( 'HP_ALERTS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
