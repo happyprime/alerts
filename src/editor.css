@@ -1,3 +1,4 @@
+.hp-alert-settings > .components-radio-control + *,
 .hp-alert-settings > .components-base-control + * {
 	margin-top: 20px;
 }
