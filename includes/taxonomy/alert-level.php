@@ -44,7 +44,7 @@ function register_taxonomy(): void {
 				'update_item'                => __( 'Update Level', 'hp-alerts' ),
 				'add_new_item'               => __( 'Add New Level', 'hp-alerts' ),
 				'new_item_name'              => __( 'New Level Name', 'hp-alerts' ),
-				'seperate_items_with_commas' => __( 'Separate levels with commas', 'hp-alerts' ),
+				'separate_items_with_commas' => __( 'Separate levels with commas', 'hp-alerts' ),
 				'add_or_remove_items'        => __( 'Add or remove levels', 'hp-alerts' ),
 				'not_found'                  => __( 'No levels found', 'hp-alerts' ),
 				'no_terms'                   => __( 'No alert levels', 'hp-alerts' ),
