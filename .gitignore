@@ -4,3 +4,6 @@
 
 # Ignore local Claude settings
 .claude/settings.local.json
+
+# Ignore review output
+.reviews/

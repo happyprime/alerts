@@ -2,7 +2,7 @@
 	"landingPage": "/wp-admin/post-new.php",
 	"preferredVersions": {
 		"php": "8.2",
-		"wp": "latest"
+		"wp": "7.0"
 	},
 	"steps": [
 		{

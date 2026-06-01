@@ -18,8 +18,8 @@
 		"url": "https://github.com/happyprime/alerts/"
 	},
 	"devDependencies": {
-		"@wordpress/env": "^10.0.0",
-		"@wordpress/scripts": "30.15.0"
+		"@wordpress/env": "^11.7.0",
+		"@wordpress/scripts": "32.3.0"
 	},
 	"scripts": {
 		"build": "wp-scripts build",
