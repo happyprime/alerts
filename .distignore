@@ -1,7 +1,9 @@
 .git/
 .github/
 .gitignore
+.browserslistrc
 .distignore
+.editorconfig
 .eslintrc.js
 composer.json
 composer.lock

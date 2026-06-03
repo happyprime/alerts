@@ -1,3 +1,9 @@
 # Ignore all 3rd party libraries.
 /vendor/
 /node_modules/
+
+# Ignore local Claude settings
+.claude/settings.local.json
+
+# Ignore review output
+.reviews/
