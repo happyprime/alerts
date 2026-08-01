@@ -3,11 +3,7 @@ module.exports = {
 	env: {
 		browser: true,
 	},
-	ignorePatterns: [
-		'.*.js',
-		'*.config.js',
-		'**/build/*.js',
-	],
+	ignorePatterns: [ '.*.js', '*.config.js', '**/build/*.js' ],
 	rules: {
 		'no-console': [ 'warn', { allow: [ 'error' ] } ],
 	},
